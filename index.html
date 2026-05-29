@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thomas Föhn | Videographer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f0ece4;
+      --muted: #5a5650;
+      --accent: #c8b89a;
+      --border: rgba(240,236,228,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--fg);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(240,236,228,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, opacity 0.3s;
+    }
+    .cursor.hovering { width: 6px; height: 6px; }
+    .cursor-ring.hovering { width: 56px; height: 56px; opacity: 0.4; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 48px;
+    }
+    nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-location {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      position: relative;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      position: relative;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 48px 80px;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(54px, 9vw, 130px);
+      line-height: 0.95;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+      max-width: 900px;
+      animation: fadeUp 0.8s ease 0.25s both;
+    }
+    .hero-title span {
+      display: block;
+      font-style: normal;
+      font-weight: 300;
+      font-size: clamp(16px, 2vw, 24px);
+      letter-spacing: 0.04em;
+      margin-top: 24px;
+      color: var(--accent);
+      line-height: 1.5;
+    }
+    .hero-clock {
+      position: absolute;
+      top: 50%;
+      right: 48px;
+      transform: translateY(-50%);
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-clock-time {
+      font-size: 13px;
+      color: var(--fg);
+      letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 48px;
+      right: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MARQUEE */
+    .marquee-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+    }
+    .marquee-track {
+      display: inline-flex;
+      animation: marquee 25s linear infinite;
+      width: max-content;
+    }
+    .marquee-item {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(32px, 4.5vw, 58px);
+      font-weight: 300;
+      color: var(--fg);
+      padding: 0 32px;
+      opacity: 0.85;
+    }
+    .marquee-dot {
+      font-size: 12px;
+      color: var(--accent);
+      vertical-align: middle;
+      padding: 0 8px;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ACHIEVEMENTS */
+    .achievements-section {
+      padding: 120px 48px;
+    }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .achievement-item {
+      background: var(--bg);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .achievement-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 1px;
+      height: 0;
+      background: var(--accent);
+      transition: height 0.5s ease;
+    }
+    .achievement-item:hover::before { height: 100%; }
+    .achievement-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 300;
+      color: var(--fg);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .achievement-number sup {
+      font-size: 0.4em;
+      vertical-align: super;
+      color: var(--accent);
+    }
+    .achievement-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .achievement-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 220px;
+    }
+
+    /* ABOUT / TOOLS */
+    .about-section {
+      padding: 0 48px 120px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .about-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(36px, 4vw, 60px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--fg);
+      margin-bottom: 32px;
+    }
+    .about-body {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .tools-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tool-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tool-name {
+      font-size: 15px;
+      color: var(--fg);
+    }
+    .tool-use {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* BIG MARQUEE */
+    .big-marquee-section {
+      padding: 80px 0;
+      overflow: hidden;
+      width: 100%;
+    }
+    .big-marquee-row {
+      display: flex;
+      white-space: nowrap;
+      margin-bottom: -8px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .big-marquee-row.reverse .big-marquee-track { animation-direction: reverse; }
+    .big-marquee-track {
+      display: inline-flex;
+      animation: marquee 32s linear infinite;
+      width: max-content;
+    }
+    .big-marquee-word {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(64px, 9vw, 130px);
+      font-weight: 300;
+      padding: 0 40px;
+      line-height: 1;
+    }
+    .big-marquee-word.outline {
+      -webkit-text-stroke: 1px rgba(240,236,228,0.2);
+      color: transparent;
+    }
+    .big-marquee-word.filled { color: var(--fg); }
+
+    /* CONTACT */
+    .contact-section {
+      padding: 120px 48px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .contact-pre {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .contact-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(36px, 6vw, 88px);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 56px;
+      color: var(--fg);
+    }
+    .contact-email {
+      display: inline-block;
+      font-size: clamp(16px, 2.5vw, 28px);
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 4px;
+      transition: color 0.2s;
+    }
+    .contact-email:hover { color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+    }
+    .footer-logo {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+    .footer-copy {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-top: 8px;
+    }
+    .footer-social {
+      display: flex;
+      justify-content: flex-end;
+      gap: 24px;
+    }
+    .footer-social a {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-social a:hover { color: var(--fg); }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9990;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    nav { animation: fadeUp 0.6s ease 0s both; }
+
+    @media (max-width: 900px) {
+      body { cursor: auto; }
+      .cursor, .cursor-ring { display: none; }
+      nav { padding: 20px 24px; }
+      .nav-location { display: none; }
+      .nav-links { gap: 20px; }
+      .hero { padding: 0 24px 60px; }
+      .hero-clock { display: none; }
+      .hero-scroll-hint { right: 24px; }
+      .achievements-section { padding: 80px 24px; }
+      .achievements-grid { grid-template-columns: 1fr; }
+      .about-section { grid-template-columns: 1fr; gap: 48px; padding: 0 24px 80px; }
+      .contact-section { padding: 80px 24px; }
+      footer { grid-template-columns: 1fr; gap: 16px; padding: 32px 24px; }
+      .footer-social { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="#" class="nav-logo">Thomas Föhn</a>
+    <span class="nav-location">Aspiring Videographer</span>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#achievements">Achievements</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <p class="hero-eyebrow">Videographer · Content Creator</p>
+    <h1 class="hero-title">
+      aspiring<br>videographer
+      <span>Focused on Storytelling &amp; Emotion.<br>Editing &amp; Colour Grading with DaVinci Resolve.</span>
+    </h1>
+    <div class="hero-clock">
+      <span>Local time</span>
+      <span class="hero-clock-time" id="clockTime">00:00:00</span>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE — items duplicated exactly for seamless loop -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item">Storytelling</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Colour Grading</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Video Editing</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">DaVinci Resolve</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Content Creation</span><span class="marquee-dot">·</span>
+      <!-- duplicate set -->
+      <span class="marquee-item">Storytelling</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Colour Grading</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Video Editing</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">DaVinci Resolve</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Content Creation</span><span class="marquee-dot">·</span>
+    </div>
+  </div>
+
+  <section class="achievements-section" id="achievements">
+    <div class="section-label">So far</div>
+    <div class="achievements-grid">
+
+      <div class="achievement-item">
+        <div class="achievement-number">7M<sup>+</sup></div>
+        <div class="achievement-label">Total Views</div>
+        <div class="achievement-desc">Across all platforms — organic reach built through consistent content.</div>
+      </div>
+
+      <div class="achievement-item">
+        <div class="achievement-number">3K<sup>+</sup></div>
+        <div class="achievement-label">Followers</div>
+        <div class="achievement-desc">A growing community across all platforms.</div>
+      </div>
+
+      <div class="achievement-item">
+        <div class="achievement-number">100<sup>%</sup></div>
+        <div class="achievement-label">Self-Taught</div>
+        <div class="achievement-desc">Every edit, every grade — learned independently with DaVinci Resolve.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="about-section" id="about">
+    <div class="about-text-block">
+      <h2 class="about-headline">Turning moments<br>into stories.</h2>
+      <p class="about-body">
+        I'm Thomas — a content creator and aspiring videographer with a passion for visual storytelling.
+        I've spent years editing and producing gaming content, racking up over 7 million views in the process.
+        Now I'm taking that eye for pacing, emotion, and narrative and pointing it at the world through a lens.
+        Just getting started — but already obsessed.
+      </p>
+    </div>
+    <div class="tools-block">
+      <div class="tools-label">Tools &amp; Skills</div>
+      <div class="tool-row">
+        <span class="tool-name">DaVinci Resolve</span>
+        <span class="tool-use">Editing · Colour Grade</span>
+      </div>
+      <div class="tool-row">
+        <span class="tool-name">Storytelling</span>
+        <span class="tool-use">Pacing · Narrative</span>
+      </div>
+      <div class="tool-row">
+        <span class="tool-name">Content Creation</span>
+        <span class="tool-use">7M+ Views · Multi-platform</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIG MARQUEE — words duplicated for seamless loop -->
+  <div class="big-marquee-section">
+    <div class="big-marquee-row">
+      <div class="big-marquee-track">
+        <span class="big-marquee-word filled">story.</span>
+        <span class="big-marquee-word outline">emotion.</span>
+        <span class="big-marquee-word filled">create.</span>
+        <span class="big-marquee-word outline">story.</span>
+        <span class="big-marquee-word filled">emotion.</span>
+        <span class="big-marquee-word outline">create.</span>
+        <!-- duplicate -->
+        <span class="big-marquee-word filled">story.</span>
+        <span class="big-marquee-word outline">emotion.</span>
+        <span class="big-marquee-word filled">create.</span>
+        <span class="big-marquee-word outline">story.</span>
+        <span class="big-marquee-word filled">emotion.</span>
+        <span class="big-marquee-word outline">create.</span>
+      </div>
+    </div>
+    <div class="big-marquee-row reverse">
+      <div class="big-marquee-track">
+        <span class="big-marquee-word outline">vision.</span>
+        <span class="big-marquee-word filled">frame.</span>
+        <span class="big-marquee-word outline">inspire.</span>
+        <span class="big-marquee-word filled">vision.</span>
+        <span class="big-marquee-word outline">frame.</span>
+        <span class="big-marquee-word filled">inspire.</span>
+        <!-- duplicate -->
+        <span class="big-marquee-word outline">vision.</span>
+        <span class="big-marquee-word filled">frame.</span>
+        <span class="big-marquee-word outline">inspire.</span>
+        <span class="big-marquee-word filled">vision.</span>
+        <span class="big-marquee-word outline">frame.</span>
+        <span class="big-marquee-word filled">inspire.</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="contact-section" id="contact">
+    <p class="contact-pre">Want to work together? Get in touch.</p>
+    <h2 class="contact-headline">Let's create<br>something together.</h2>
+    <a href="mailto:thomasfoehn16@gmail.com" class="contact-email">thomasfoehn16@gmail.com</a>
+  </section>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Thomas Föhn</div>
+      <div class="footer-copy">© 2026</div>
+    </div>
+    <div></div>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/tf.tommyy" target="_blank">Instagram</a>
+      <a href="https://www.linkedin.com/in/thomasfoehn/" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script>
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('clockTime').textContent = `${h}:${m}:${s}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Cursor (desktop only)
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('hovering');
+        ring.classList.add('hovering');
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hovering');
+        ring.classList.remove('hovering');
+      });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.achievement-item, .about-headline, .about-body, .tool-row, .contact-headline, .contact-pre, .contact-email').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(28px)';
+      el.style.transition = `opacity 0.7s ease ${i * 0.06}s, transform 0.7s ease ${i * 0.06}s`;
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
