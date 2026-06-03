@@ -10,10 +10,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0a;
-      --fg: #f0ece4;
-      --muted: #5a5650;
-      --accent: #c8b89a;
+      --bg: #0c0b0f;
+      --fg: #f0ece4;           /* headings, names, primary text */
+      --body: #b8b4ae;         /* body paragraphs — readable, not blinding */
+      --sub: #888480;          /* secondary labels, meta, issuer lines */
+      --accent: #e8a87c;       /* orange */
+      --accent2: #7c9ee8;      /* blue */
+      --accent3: #b87ce8;      /* purple */
       --border: rgba(240,236,228,0.08);
     }
 
@@ -27,21 +30,21 @@
       cursor: none;
     }
 
+    /* CURSOR */
     .cursor {
       position: fixed;
       width: 10px; height: 10px;
-      background: var(--fg);
+      background: var(--accent);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s;
-      mix-blend-mode: difference;
+      transition: width 0.3s, height 0.3s, background 0.3s;
     }
     .cursor-ring {
       position: fixed;
       width: 36px; height: 36px;
-      border: 1px solid rgba(240,236,228,0.5);
+      border: 1px solid rgba(232,168,124,0.5);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9998;
@@ -65,11 +68,10 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, transparent 100%);
+      background: linear-gradient(to bottom, rgba(12,11,15,0.95) 0%, transparent 100%);
       pointer-events: none;
     }
     .nav-logo {
-      font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: 14px;
       letter-spacing: 0.12em;
@@ -80,7 +82,7 @@
     }
     .nav-location {
       font-size: 11px;
-      color: var(--muted);
+      color: var(--sub);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       position: relative;
@@ -92,14 +94,14 @@
       position: relative;
     }
     .nav-links a {
-      color: var(--muted);
+      color: var(--sub);
       text-decoration: none;
       font-size: 12px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--fg); }
+    .nav-links a:hover { color: var(--accent); }
 
     /* HERO */
     .hero {
@@ -109,14 +111,34 @@
       justify-content: flex-end;
       padding: 0 48px 80px;
       position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,158,232,0.12) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,124,232,0.08) 0%, transparent 70%);
+      bottom: 100px; left: 200px;
+      pointer-events: none;
     }
     .hero-eyebrow {
       font-size: 12px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--accent);
       margin-bottom: 16px;
       animation: fadeUp 0.8s ease 0.1s both;
+      position: relative;
     }
     .hero-title {
       font-family: 'Cormorant Garamond', serif;
@@ -128,26 +150,41 @@
       letter-spacing: -0.02em;
       max-width: 900px;
       animation: fadeUp 0.8s ease 0.25s both;
+      position: relative;
     }
-    .hero-title span {
-      display: block;
-      font-style: normal;
+    /* "videographer" — same style as "aspiring" */
+    .hero-title .highlight {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
       font-weight: 300;
-      font-size: clamp(16px, 2vw, 24px);
-      letter-spacing: 0.04em;
-      margin-top: 24px;
-      color: var(--accent);
-      line-height: 1.5;
+      color: var(--fg);
+      -webkit-text-fill-color: var(--fg);
+      font-size: clamp(54px, 9vw, 130px);
+    }
+    .hero-title span.subtitle {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: clamp(13px, 1.4vw, 18px);
+      letter-spacing: 0.08em;
+      margin-top: 32px;
+      color: var(--body);
+      line-height: 2;
+      -webkit-text-fill-color: var(--body);
+      text-transform: uppercase;
+      border-left: 2px solid var(--accent);
+      padding-left: 16px;
+      max-width: 460px;
     }
     .hero-clock {
       position: absolute;
       top: 50%;
       right: 48px;
       transform: translateY(-50%);
-      font-family: 'Syne', sans-serif;
       font-size: 11px;
       letter-spacing: 0.12em;
-      color: var(--muted);
+      color: var(--sub);
       text-transform: uppercase;
       writing-mode: vertical-rl;
       display: flex;
@@ -157,7 +194,7 @@
     }
     .hero-clock-time {
       font-size: 13px;
-      color: var(--fg);
+      color: var(--accent2);
       letter-spacing: 0.04em;
       font-variant-numeric: tabular-nums;
     }
@@ -169,7 +206,7 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      color: var(--muted);
+      color: var(--sub);
       font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -177,16 +214,13 @@
     .scroll-line {
       width: 1px;
       height: 60px;
-      background: linear-gradient(to bottom, var(--muted), transparent);
+      background: linear-gradient(to bottom, var(--accent), transparent);
       animation: scrollPulse 2s ease-in-out infinite;
     }
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
-    }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* MARQUEE */
@@ -197,6 +231,7 @@
       overflow: hidden;
       white-space: nowrap;
       width: 100%;
+      background: linear-gradient(90deg, rgba(232,168,124,0.03), rgba(124,158,232,0.03), rgba(184,124,232,0.03));
     }
     .marquee-track {
       display: inline-flex;
@@ -210,28 +245,25 @@
       font-weight: 300;
       color: var(--fg);
       padding: 0 32px;
-      opacity: 0.85;
     }
+    .marquee-item:nth-child(4n+3) { color: var(--accent); }
     .marquee-dot {
       font-size: 12px;
-      color: var(--accent);
+      color: var(--accent3);
       vertical-align: middle;
       padding: 0 8px;
     }
     @keyframes marquee {
       from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+      to   { transform: translateX(-50%); }
     }
 
-    /* ACHIEVEMENTS */
-    .achievements-section {
-      padding: 120px 48px;
-    }
+    /* SECTION LABEL */
     .section-label {
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--accent);
       margin-bottom: 64px;
       display: flex;
       align-items: center;
@@ -241,7 +273,22 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--border);
+      background: linear-gradient(90deg, rgba(232,168,124,0.4), transparent);
+    }
+
+    /* ACHIEVEMENTS */
+    .achievements-section {
+      padding: 120px 48px;
+      position: relative;
+    }
+    .achievements-section::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,168,124,0.05) 0%, transparent 70%);
+      top: 0; left: -100px;
+      pointer-events: none;
     }
     .achievements-grid {
       display: grid;
@@ -255,45 +302,45 @@
       padding: 48px 40px;
       position: relative;
       overflow: hidden;
+      transition: background 0.4s;
     }
+    .achievement-item:nth-child(1) { --item-color: var(--accent); }
+    .achievement-item:nth-child(2) { --item-color: var(--accent2); }
+    .achievement-item:nth-child(3) { --item-color: var(--accent3); }
     .achievement-item::before {
       content: '';
       position: absolute;
       top: 0; left: 0;
-      width: 1px;
-      height: 0;
-      background: var(--accent);
+      width: 1px; height: 0;
+      background: var(--item-color);
       transition: height 0.5s ease;
     }
     .achievement-item:hover::before { height: 100%; }
+    .achievement-item:hover { background: rgba(255,255,255,0.02); }
     .achievement-number {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(52px, 6vw, 88px);
       font-weight: 300;
-      color: var(--fg);
+      color: var(--item-color);
       line-height: 1;
       margin-bottom: 12px;
     }
-    .achievement-number sup {
-      font-size: 0.4em;
-      vertical-align: super;
-      color: var(--accent);
-    }
+    .achievement-number sup { font-size: 0.4em; vertical-align: super; }
     .achievement-label {
       font-size: 11px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 16px;
+      color: var(--sub);
+      margin-bottom: 12px;
     }
     .achievement-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
+      font-size: 14px;
+      color: var(--body);
+      line-height: 1.7;
       max-width: 220px;
     }
 
-    /* ABOUT / TOOLS */
+    /* ABOUT */
     .about-section {
       padding: 0 48px 120px;
       display: grid;
@@ -308,18 +355,18 @@
       font-weight: 300;
       line-height: 1.1;
       color: var(--fg);
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
     .about-body {
       font-size: 15px;
-      color: var(--muted);
-      line-height: 1.8;
+      color: var(--body);
+      line-height: 1.85;
     }
     .tools-label {
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--sub);
       margin-bottom: 32px;
       padding-bottom: 16px;
       border-bottom: 1px solid var(--border);
@@ -328,26 +375,156 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 0;
+      padding: 18px 0;
       border-bottom: 1px solid var(--border);
+      transition: padding-left 0.3s;
     }
-    .tool-name {
-      font-size: 15px;
+    .tool-row:hover { padding-left: 8px; }
+    .tool-row:nth-child(2) .tool-name { color: var(--accent); }
+    .tool-row:nth-child(3) .tool-name { color: var(--accent2); }
+    .tool-row:nth-child(4) .tool-name { color: var(--accent3); }
+    .tool-row:nth-child(5) .tool-name { color: var(--accent2); }
+    .tool-row:nth-child(6) .tool-name { color: var(--accent); }
+    .tool-name { font-size: 15px; color: var(--fg); transition: color 0.2s; }
+    .tool-use  { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sub); }
+
+    /* EXPERIENCE */
+    .experience-section {
+      padding: 0 48px 120px;
+      position: relative;
+    }
+    .experience-section::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,158,232,0.05) 0%, transparent 70%);
+      top: 0; right: -100px;
+      pointer-events: none;
+    }
+    .exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+    .exp-card {
+      background: var(--bg);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .exp-card:hover { background: rgba(255,255,255,0.02); }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--item-color, var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .exp-card:hover::before { transform: scaleX(1); }
+    .exp-card.accent  { --item-color: var(--accent); }
+    .exp-card.accent2 { --item-color: var(--accent2); }
+    .exp-tag {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--item-color, var(--accent));
+      margin-bottom: 14px;
+    }
+    .exp-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 300;
       color: var(--fg);
+      line-height: 1.2;
+      margin-bottom: 8px;
     }
-    .tool-use {
+    .exp-company {
+      font-size: 13px;
+      color: var(--body);
+      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+    }
+    .exp-date {
       font-size: 11px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--item-color, var(--accent));
+      margin-bottom: 20px;
+      padding-left: 12px;
+      border-left: 1px solid var(--item-color, var(--accent));
+    }
+    .exp-desc {
+      font-size: 14px;
+      color: var(--body);
+      line-height: 1.75;
+    }
+
+    /* CERT + LANGUAGES */
+    .cert-lang-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+    .cert-card, .lang-card {
+      background: var(--bg);
+      padding: 40px;
+    }
+    .cert-card .exp-tag { color: var(--accent3); }
+    .lang-card .exp-tag { color: var(--accent2); }
+    .cert-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .cert-item:last-child { border-bottom: none; }
+    .cert-name  { font-size: 15px; color: var(--fg); }
+    .cert-issuer {
+      font-size: 12px;
+      color: var(--body);   /* ← was --muted, now readable */
+      margin-top: 5px;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+    .cert-date {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent3);
+      white-space: nowrap;
+      padding-top: 3px;
+    }
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .lang-item:last-child { border-bottom: none; }
+    .lang-name  { font-size: 15px; color: var(--fg); }
+    .lang-level {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
     }
 
     /* BIG MARQUEE */
-    .big-marquee-section {
-      padding: 80px 0;
-      overflow: hidden;
-      width: 100%;
-    }
+    .big-marquee-section { padding: 80px 0; overflow: hidden; width: 100%; }
     .big-marquee-row {
       display: flex;
       white-space: nowrap;
@@ -368,24 +545,37 @@
       padding: 0 40px;
       line-height: 1;
     }
-    .big-marquee-word.outline {
-      -webkit-text-stroke: 1px rgba(240,236,228,0.2);
-      color: transparent;
-    }
-    .big-marquee-word.filled { color: var(--fg); }
+    .big-marquee-word.outline { -webkit-text-stroke: 1px rgba(240,236,228,0.45); color: transparent; }
+    .big-marquee-word.filled  { color: var(--fg); }
+    .big-marquee-word.orange  { color: var(--accent); }
+    .big-marquee-word.blue    { color: var(--accent2); }
+    .big-marquee-word.purple  { color: var(--accent3); }
 
     /* CONTACT */
     .contact-section {
       padding: 120px 48px;
       border-top: 1px solid var(--border);
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-section::before {
+      content: '';
+      position: absolute;
+      width: 800px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(184,124,232,0.07) 0%, transparent 70%);
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
     }
     .contact-pre {
       font-size: 12px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--accent2);
       margin-bottom: 40px;
+      position: relative;
     }
     .contact-headline {
       font-family: 'Cormorant Garamond', serif;
@@ -395,6 +585,7 @@
       line-height: 1.05;
       margin-bottom: 56px;
       color: var(--fg);
+      position: relative;
     }
     .contact-email {
       display: inline-block;
@@ -405,6 +596,7 @@
       border-bottom: 1px solid var(--accent);
       padding-bottom: 4px;
       transition: color 0.2s;
+      position: relative;
     }
     .contact-email:hover { color: var(--accent); }
 
@@ -417,41 +609,21 @@
       align-items: center;
       gap: 24px;
     }
-    .footer-logo {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--fg);
-    }
-    .footer-copy {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      margin-top: 8px;
-    }
-    .footer-social {
-      display: flex;
-      justify-content: flex-end;
-      gap: 24px;
-    }
+    .footer-logo { font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg); }
+    .footer-copy { font-size: 10px; color: var(--sub); letter-spacing: 0.08em; margin-top: 8px; }
+    .footer-social { display: flex; justify-content: flex-end; gap: 28px; align-items: center; }
     .footer-social a {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
+      font-size: 14px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--fg); text-decoration: none; transition: color 0.2s;
     }
-    .footer-social a:hover { color: var(--fg); }
+    .footer-social a:nth-child(1):hover { color: var(--accent); }
+    .footer-social a:nth-child(2):hover { color: var(--accent2); }
 
+    /* NOISE */
     body::after {
       content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9990;
-      opacity: 0.03;
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9990; opacity: 0.025;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       background-size: 200px 200px;
     }
@@ -470,6 +642,8 @@
       .achievements-section { padding: 80px 24px; }
       .achievements-grid { grid-template-columns: 1fr; }
       .about-section { grid-template-columns: 1fr; gap: 48px; padding: 0 24px 80px; }
+      .experience-section { padding: 0 24px 80px; }
+      .exp-grid, .cert-lang-grid { grid-template-columns: 1fr; }
       .contact-section { padding: 80px 24px; }
       footer { grid-template-columns: 1fr; gap: 16px; padding: 32px 24px; }
       .footer-social { justify-content: flex-start; }
@@ -483,22 +657,24 @@
 
   <nav>
     <a href="#" class="nav-logo">Thomas Föhn</a>
-    <span class="nav-location">Aspiring Videographer</span>
+    <span class="nav-location">IT Engineer · Content Creator · Editor</span>
     <ul class="nav-links">
       <li><a href="#">Home</a></li>
       <li><a href="#achievements">Achievements</a></li>
+      <li><a href="#experience">Experience</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
   <section class="hero">
-    <p class="hero-eyebrow">Videographer · Content Creator</p>
+    <p class="hero-eyebrow">IT Engineer · Content Creator · Editor</p>
     <h1 class="hero-title">
-      aspiring<br>videographer
-      <span>Focused on Storytelling &amp; Emotion.<br>Editing &amp; Colour Grading with DaVinci Resolve.</span>
+      aspiring<br>
+      <span class="highlight">videographer</span>
+      <span class="subtitle">Focused on Storytelling &amp; Emotion.<br>Editing &amp; Colour Grading with DaVinci Resolve.</span>
     </h1>
-    <div class="hero-clock">
+    <div class="hero-clock" style="position:absolute; top:50%; right:48px; transform:translateY(-50%);">
       <span>Local time</span>
       <span class="hero-clock-time" id="clockTime">00:00:00</span>
     </div>
@@ -508,7 +684,6 @@
     </div>
   </section>
 
-  <!-- MARQUEE — items duplicated exactly for seamless loop -->
   <div class="marquee-section">
     <div class="marquee-track">
       <span class="marquee-item">Storytelling</span><span class="marquee-dot">·</span>
@@ -516,37 +691,43 @@
       <span class="marquee-item">Video Editing</span><span class="marquee-dot">·</span>
       <span class="marquee-item">DaVinci Resolve</span><span class="marquee-dot">·</span>
       <span class="marquee-item">Content Creation</span><span class="marquee-dot">·</span>
-      <!-- duplicate set -->
+      <span class="marquee-item">Google AI Essentials</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Prompt Engineering</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">IT Support</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Microsoft Azure</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Endpoint Management</span><span class="marquee-dot">·</span>
+      <!-- duplicate set for seamless loop -->
       <span class="marquee-item">Storytelling</span><span class="marquee-dot">·</span>
       <span class="marquee-item">Colour Grading</span><span class="marquee-dot">·</span>
       <span class="marquee-item">Video Editing</span><span class="marquee-dot">·</span>
       <span class="marquee-item">DaVinci Resolve</span><span class="marquee-dot">·</span>
       <span class="marquee-item">Content Creation</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Google AI Essentials</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Prompt Engineering</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">IT Support</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Microsoft Azure</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Endpoint Management</span><span class="marquee-dot">·</span>
     </div>
   </div>
 
   <section class="achievements-section" id="achievements">
     <div class="section-label">So far</div>
     <div class="achievements-grid">
-
       <div class="achievement-item">
         <div class="achievement-number">7M<sup>+</sup></div>
         <div class="achievement-label">Total Views</div>
         <div class="achievement-desc">Across all platforms — organic reach built through consistent content.</div>
       </div>
-
       <div class="achievement-item">
         <div class="achievement-number">3K<sup>+</sup></div>
         <div class="achievement-label">Followers</div>
-        <div class="achievement-desc">A growing community across all platforms.</div>
+        <div class="achievement-desc">A growing community across all platforms, still climbing.</div>
       </div>
-
       <div class="achievement-item">
         <div class="achievement-number">100<sup>%</sup></div>
         <div class="achievement-label">Self-Taught</div>
         <div class="achievement-desc">Every edit, every grade — learned independently with DaVinci Resolve.</div>
       </div>
-
     </div>
   </section>
 
@@ -554,10 +735,7 @@
     <div class="about-text-block">
       <h2 class="about-headline">Turning moments<br>into stories.</h2>
       <p class="about-body">
-        I'm Thomas — a content creator and aspiring videographer with a passion for visual storytelling.
-        I've spent years editing and producing gaming content, racking up over 7 million views in the process.
-        Now I'm taking that eye for pacing, emotion, and narrative and pointing it at the world through a lens.
-        Just getting started — but already obsessed.
+        I'm Thomas — an IT professional by day and aspiring videographer by passion. Based in Zug, Switzerland, I work as a Group IT Service Desk Engineer at Komax, where I've spent five years handling enterprise IT operations. Outside of work, I'm obsessed with visual storytelling — years of editing gaming content, 7 million views and over 3 thousand followers, and now channelling that same eye for pacing and emotion into videography. Just getting started with the lens — but the skills are already there.
       </p>
     </div>
     <div class="tools-block">
@@ -574,43 +752,104 @@
         <span class="tool-name">Content Creation</span>
         <span class="tool-use">7M+ Views · Multi-platform</span>
       </div>
+      <div class="tool-row">
+        <span class="tool-name">Microsoft 365 &amp; Azure</span>
+        <span class="tool-use">IT Operations</span>
+      </div>
+      <div class="tool-row">
+        <span class="tool-name">AI &amp; Prompt Engineering</span>
+        <span class="tool-use">Google Certified</span>
+      </div>
     </div>
   </section>
 
-  <!-- BIG MARQUEE — words duplicated for seamless loop -->
+  <section class="experience-section" id="experience">
+    <div class="section-label">Experience &amp; Education</div>
+
+    <div class="exp-grid">
+      <div class="exp-card accent">
+        <div class="exp-tag">Current Role</div>
+        <div class="exp-title">Group IT Service Desk<br>Engineer</div>
+        <div class="exp-company">Komax — Dierikon, Lucerne</div>
+        <div class="exp-date">Aug 2025 – Present · 11 months</div>
+        <div class="exp-desc">Supporting enterprise IT operations — hardware deployment, user account management, first-level troubleshooting, network patching, and independent IT project execution in a production environment.</div>
+      </div>
+      <div class="exp-card accent2">
+        <div class="exp-tag">Apprenticeship</div>
+        <div class="exp-title">ICT-Fachmann<br>Apprentice</div>
+        <div class="exp-company">Komax — Dierikon, Lucerne</div>
+        <div class="exp-date">Aug 2022 – Jul 2025 · 3 years</div>
+        <div class="exp-desc">Completed a full ICT apprenticeship covering endpoint management, workstation setup, MDM, IT documentation, and end-user support. Transitioned directly into a full-time engineer role upon completion.</div>
+      </div>
+    </div>
+
+    <div class="cert-lang-grid">
+      <div class="cert-card">
+        <div class="exp-tag" style="color:var(--accent3)">Certifications &amp; Education</div>
+        <div class="cert-item">
+          <div>
+            <div class="cert-name">Google AI Essentials</div>
+            <div class="cert-issuer">Google · Prompt Engineering · Responsible AI</div>
+          </div>
+          <div class="cert-date">May 2026</div>
+        </div>
+        <div class="cert-item">
+          <div>
+            <div class="cert-name">EFZ Diploma — ICT-Fachmann</div>
+            <div class="cert-issuer">BBZW Sursee · IT &amp; Technical Support</div>
+          </div>
+          <div class="cert-date">Jul 2025</div>
+        </div>
+      </div>
+      <div class="lang-card">
+        <div class="exp-tag" style="color:var(--accent2)">Languages</div>
+        <div class="lang-item">
+          <span class="lang-name">German</span>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">English</span>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">French</span>
+          <span class="lang-level">Native</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="big-marquee-section">
     <div class="big-marquee-row">
       <div class="big-marquee-track">
-        <span class="big-marquee-word filled">story.</span>
+        <span class="big-marquee-word orange">story.</span>
         <span class="big-marquee-word outline">emotion.</span>
-        <span class="big-marquee-word filled">create.</span>
+        <span class="big-marquee-word blue">create.</span>
         <span class="big-marquee-word outline">story.</span>
-        <span class="big-marquee-word filled">emotion.</span>
+        <span class="big-marquee-word orange">emotion.</span>
         <span class="big-marquee-word outline">create.</span>
-        <!-- duplicate -->
-        <span class="big-marquee-word filled">story.</span>
+        <span class="big-marquee-word orange">story.</span>
         <span class="big-marquee-word outline">emotion.</span>
-        <span class="big-marquee-word filled">create.</span>
+        <span class="big-marquee-word blue">create.</span>
         <span class="big-marquee-word outline">story.</span>
-        <span class="big-marquee-word filled">emotion.</span>
+        <span class="big-marquee-word orange">emotion.</span>
         <span class="big-marquee-word outline">create.</span>
       </div>
     </div>
     <div class="big-marquee-row reverse">
       <div class="big-marquee-track">
         <span class="big-marquee-word outline">vision.</span>
-        <span class="big-marquee-word filled">frame.</span>
+        <span class="big-marquee-word purple">frame.</span>
         <span class="big-marquee-word outline">inspire.</span>
         <span class="big-marquee-word filled">vision.</span>
         <span class="big-marquee-word outline">frame.</span>
-        <span class="big-marquee-word filled">inspire.</span>
-        <!-- duplicate -->
+        <span class="big-marquee-word purple">inspire.</span>
         <span class="big-marquee-word outline">vision.</span>
-        <span class="big-marquee-word filled">frame.</span>
+        <span class="big-marquee-word purple">frame.</span>
         <span class="big-marquee-word outline">inspire.</span>
         <span class="big-marquee-word filled">vision.</span>
         <span class="big-marquee-word outline">frame.</span>
-        <span class="big-marquee-word filled">inspire.</span>
+        <span class="big-marquee-word purple">inspire.</span>
       </div>
     </div>
   </div>
@@ -634,7 +873,6 @@
   </footer>
 
   <script>
-    // Clock
     function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2,'0');
@@ -645,39 +883,31 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Cursor (desktop only)
     const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
+    const ring   = document.getElementById('cursorRing');
     let mx = 0, my = 0, rx = 0, ry = 0;
 
     document.addEventListener('mousemove', e => {
       mx = e.clientX; my = e.clientY;
       cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
+      cursor.style.top  = my + 'px';
     });
 
     function animateRing() {
       rx += (mx - rx) * 0.12;
       ry += (my - ry) * 0.12;
       ring.style.left = rx + 'px';
-      ring.style.top = ry + 'px';
+      ring.style.top  = ry + 'px';
       requestAnimationFrame(animateRing);
     }
     animateRing();
 
     document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.classList.add('hovering');
-        ring.classList.add('hovering');
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.classList.remove('hovering');
-        ring.classList.remove('hovering');
-      });
+      el.addEventListener('mouseenter', () => { cursor.classList.add('hovering'); ring.classList.add('hovering'); });
+      el.addEventListener('mouseleave', () => { cursor.classList.remove('hovering'); ring.classList.remove('hovering'); });
     });
 
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           e.target.style.opacity = '1';
@@ -686,7 +916,7 @@
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.achievement-item, .about-headline, .about-body, .tool-row, .contact-headline, .contact-pre, .contact-email').forEach((el, i) => {
+    document.querySelectorAll('.achievement-item, .about-headline, .about-body, .tool-row, .exp-card, .cert-card, .lang-card, .contact-headline, .contact-pre, .contact-email').forEach((el, i) => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(28px)';
       el.style.transition = `opacity 0.7s ease ${i * 0.06}s, transform 0.7s ease ${i * 0.06}s`;
